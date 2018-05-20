@@ -1,5 +1,5 @@
 # IDEA
-IDEA (IDentifying Emerging issues from App reviews) is a framework for detecting emerging issues from version-sensitive app reviews.
+IDEA (IDentifying Emerging issues from App reviews) is a framework for detecting emerging issues from version-sensitive app reviews. You can view the [visualized demo](https://remine-lab.github.io/paper/idea_icse_18.html#home) with the output of IDEA on Youtube dataset.
 
 <p align="center"><img width="70%" src="framework.png" /></p>
 
@@ -8,7 +8,7 @@ IDEA employs a novel method AOLDA (Adaptively Online Latent Dirichlet Allocation
 > Cuiyun Gao, Jichuan Zeng, Michael Lyu, Irwin King. Online App Review Analysis for Identifying Emerging Issues. ICSE 2018.
 
 
-## Data Format
+## Input Data Format
 Input raw reviews should be saved as the following format per line. The attributes are separated by `******`, and only the first five attributes are necessary. The number of attributes should be claimed in the variable `InfoNum` under the `[Info]` section. Here, `InfoNum=6`.
 
 ```
@@ -40,7 +40,7 @@ $ python main.py
 One can modify the parameters for the inputs and outputs in the `config.ini` file easily.
 
 ## Dataset in the Paper
-Researchers interested in obtaining the the full dataset (including the verification files) used in the paper may submit a [data request form](https://goo.gl/forms/nAAkSa5o5yrSIaPr2) to be provided with the data usage agreement and further information on obtaining the data.
+Researchers interested in obtaining the the full dataset (including the validation files) used in the paper may submit a [data request form](https://goo.gl/forms/nAAkSa5o5yrSIaPr2) to be provided with the data usage agreement and further information on obtaining the data.
 
 
 ## Visualization
@@ -76,7 +76,7 @@ Please cite the ICSE paper if you use IDEA in your work:
 ```
 @inproceedings{gao2018online,
   title={Online App Review Analysis for Identifying Emerging Issues},
-  author={Gao Cuiyun and Zeng Jichuan and Michael R. Lyu and Irwin King},
+  author={Cuiyun Gao and Jichuan Zeng and Michael R. Lyu and Irwin King},
   booktitle={Proceedings of the 40th International Conference on Software Engineering, {ICSE} 2018},
   year={2018}
 }
