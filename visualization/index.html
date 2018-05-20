@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<style>
+
+body {
+  font: 10px sans-serif;
+}
+
+.chart { 
+  background: #fff;
+}
+
+p {
+  font: 12px helvetica;
+}
+
+
+.axis path, .axis line {
+  fill: none;
+  stroke: #000;
+  stroke-width: 2px;
+  shape-rendering: crispEdges;
+}
+
+button {
+  position: absolute;
+  right: 50px;
+  top: 10px;
+}
+
+</style>
+<body>
+<script src="http://d3js.org/d3.v2.js"></script>
+
+
+<div class="chart">
+</div>
+
+<script>
+
+chart("topic_label_browser.csv", "multiple");
+
+var datearray = [];
+var colorrange = [];
+
+
+function chart(csvpath, color) {
+
+if (color == "blue") {
+  colorrange = ["#045A8D", "#2B8CBE", "#74A9CF", "#A6BDDB", "#D0D1E6", "#F1EEF6"];
+}
+else if (color == "pink") {
+  colorrange = ["#980043", "#DD1C77", "#DF65B0", "#C994C7", "#D4B9DA", "#F1EEF6"];
+}
+else if (color == "orange") {
+  colorrange = ["#B30000", "#E34A33", "#FC8D59", "#FDBB84", "#FDD49E", "#FEF0D9", "#045A8D", "#2B8CBE", "#74A9CF", "#A6BDDB", "#D0D1E6", "#F1EEF6"];
+}
+else if (color == "multiple") {
+  colorrange = ["#813405", "#D45113", "#F9A03F", "#F8DDA4", "#89BD9E", "#F49F0A", "#D5D887", "#A1CF6B", "#7AC74F", "#D56AA0", "#A64253", "#861657"];
+}
+strokecolor = colorrange[0];
+
+var format = d3.time.format("%m/%d/%Y");
+var bisectDate = d3.bisector(function(d) { return d.num; }).left;
+// var visectData = d3.bisector(function(d) { return d.value; }).
+
+var margin = {top: 20, right: 40, bottom: 30, left: 30};
+var width = document.body.clientWidth - margin.left - margin.right;
+var height = 600 - margin.top - margin.bottom;
+
+var tooltip = d3.select("body")
+    .append("div")
+    .attr("class", "remove")
+    .style("position", "absolute")
+    .style("z-index", "20")
+    .style("visibility", "hidden")
+    .style("bottom", "80px")
+    .style("left", "55px");
+
+var x = d3.time.scale()
+    .range([0, width]);
+
+var y = d3.scale.linear()
+    .range([height-10, 0]);
+
+var z = d3.scale.ordinal()
+    .range(colorrange);
+
+var xAxis = d3.svg.axis()
+    .scale(x)
+    .orient("bottom")
+    .tickFormat(d3.format(",.0f"))
+    // .ticks(d3.time.weeks);
+
+var yAxis = d3.svg.axis()
+    .scale(y);
+
+var yAxisr = d3.svg.axis()
+    .scale(y);
+
+var stack = d3.layout.stack()
+    .offset("silhouette")
+    .values(function(d) { return d.values; })
+    .x(function(d) { return d.num; })
+    .y(function(d) { return d.value; });
+
+var nest = d3.nest()
+    .key(function(d) { return d.key; });
+
+var area = d3.svg.area()
+    .interpolate("cardinal")
+    .x(function(d) { return x(d.num); })
+    .y0(function(d) { return y(d.y0); })
+    .y1(function(d) { return y(d.y0+d.value); });
+
+var svg = d3.select(".chart").append("svg")
+    .attr("width", width + margin.left + margin.right)
+    .attr("height", height + margin.top + margin.bottom)
+  .append("g")
+    .attr("transform", "translate(" + margin.left + "," + margin.top + ")");
+
+var graph = d3.csv(csvpath, function(data) {
+  data.forEach(function(d) {
+    d.num = +d.num;
+    d.value = +d.value;
+  });
+
+  var layers = stack(nest.entries(data));
+
+  x.domain(d3.extent(data, function(d) { return d.num; }));
+  y.domain([0, d3.max(data, function(d) { return (d.y0+d.value); })]);
+
+  svg.selectAll(".layer")
+      .data(layers)
+    .enter().append("path")
+      .attr("class", "layer")
+      .attr("d", function(d) { return area(d.values); })
+      .style("fill", function(d, i) { return z(i); });
+
+
+  svg.append("g")
+      .attr("class", "x axis")
+      .attr("transform", "translate(0," + height + ")")
+      .call(xAxis.orient("bottom"));
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .attr("transform", "translate(" + width + ", 0)")
+      .call(yAxis.orient("right"));
+
+  svg.append("g")
+      .attr("class", "y axis")
+      .call(yAxis.orient("left"));
+
+  svg.selectAll(".layer")
+    .attr("opacity", 1)
+    .on("mouseover", function(d, i) {
+      svg.selectAll(".layer").transition()
+      .duration(250)
+      .attr("opacity", function(d, j) {
+        return j != i ? 0.6 : 1;
+    })})
+
+    .on("mousemove", function(d, i) {
+      var x0 = x.invert(d3.mouse(this)[0]),
+             // should use d.values, not d or data, to get the function to work
+            j = bisectDate(d.values, x0);
+
+      pro = d.values[j].value;
+      label = d.values[j].label;
+      version = d.values[j].version;
+      console.log(j)
+      console.log(version)
+      emerlabel = d.values[j].emerlabel;
+      sent1 = d.values[j].sent1;
+      sent2 = d.values[j].sent2;
+      sent3 = d.values[j].sent3;
+
+      if (emerlabel == "0")
+      {
+        d3.select(this)
+        .classed("hover", true)
+        .attr("stroke", strokecolor)
+        .attr("stroke-width", "0.5px"), 
+        tooltip.html( "<div style='width: 1000px; height: 150px; padding: 20px; border: 2px solid darkblue; border-radius: 8px;'><p>Version: " + version + "<br>Label: " + label + "<br>Value: " + pro + "<br>Sentence 1: " + sent1 + "<br>Sentence 2: " + sent2 + "<br>Sentence 3: " + sent3 + "</p></div>" ).style("visibility", "visible");
+      }
+      else
+      {
+        d3.select(this)
+        .classed("hover", true)
+        .attr("stroke", strokecolor)
+        .attr("stroke-width", "0.5px"), 
+        tooltip.html( "<div style='width: 1000px; height: 150px; padding: 20px; border: 2px solid darkblue; border-radius: 8px;'><p>Version: " + version + "<br>Label: " + label + "<br>Value: " + pro + "<br><span style='background-color: yellow;'>Emerging Topic: " + emerlabel + "</span><br><span style='background-color: yellow;'>Sentence 1: " + sent1 + "</span><br><span style='background-color: yellow;'>Sentence 2: " + sent2 + "</span><br><span style='background-color: yellow;'>Sentence 3: " + sent3 + "</span></p></div>" ).style("visibility", "visible");
+      }
+      
+    })
+    .on("mouseout", function(d, i) {
+     svg.selectAll(".layer")
+      .transition()
+      .duration(250)
+      .attr("opacity", "1");
+      d3.select(this)
+      .classed("hover", false)
+      .attr("stroke-width", "0px"), tooltip.html( "<p>" + label + "<br>" + pro + "</p>" ).style("visibility", "hidden");
+  })
+    
+  var vertical = d3.select(".chart")
+        .append("div")
+        .attr("class", "remove")
+        .style("position", "absolute")
+        .style("z-index", "19")
+        .style("width", "1px")
+        .style("height", "380px")
+        .style("top", "10px")
+        .style("bottom", "30px")
+        .style("left", "0px")
+        .style("background", "#fff");
+
+  d3.select(".chart")
+      .on("mousemove", function(){  
+         mousex = d3.mouse(this);
+         mousex = mousex[0] + 1;
+         vertical.style("left", mousex + "px" )})
+      .on("mouseover", function(){  
+         mousex = d3.mouse(this);
+         mousex = mousex[0] + 1;
+         vertical.style("left", mousex + "px")});
+});
+}
+</script>
