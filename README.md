@@ -72,7 +72,7 @@ $ python main.py
 
 ## Citation
 
-Please cite the ICSE paper if you use IDEA in your work:
+Please cite the ICSE paper if you use IDEA/datasets/trained word2vec in your work:
 ```
 @inproceedings{gao2018online,
   title={Online App Review Analysis for Identifying Emerging Issues},
