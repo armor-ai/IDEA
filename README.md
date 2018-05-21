@@ -37,7 +37,7 @@ $ python build_pyx.py build_ext --inplace
 $ python main.py
 ```
 
-One can modify the parameters for the inputs and outputs in the `config.ini` file easily.
+One can modify the parameters for the inputs and outputs in `config.ini` easily. The outputs will be stored in `result/`.
 
 ## Dataset in the Paper
 Researchers interested in obtaining the the full dataset (including the validation files) used in the paper may submit a [data request form](https://goo.gl/forms/nAAkSa5o5yrSIaPr2) to be provided with the data usage agreement and further information on obtaining the data.
@@ -55,7 +55,7 @@ topic_nubmer  ----- the number of topics
 
 2. Use localhost server to display the topic river. For Python 2, run `$ python -m SimpleHTTPServer 7778`, while for Python 3, run `python -m http.server 7778`. `7778` is the port number for viewing the visualization, e.g., for localhost, here we type `localhost:7778` in the browser.
 
-**For Linux or Mac:**, can simply run:
+**For Linux or iOS:**, can simply run:
 
 ```
 $ bash visualize.sh <result_folder> <K>
@@ -72,13 +72,13 @@ $ python main.py
 
 ## Citation
 
-Please cite the ICSE paper if you use IDEA/datasets/trained word2vec in your work:
+Please cite the ICSE paper if you use IDEA / datasets / trained word2vec in your work:
 ```
 @inproceedings{gao2018online,
-  title={Online App Review Analysis for Identifying Emerging Issues},
-  author={Cuiyun Gao and Jichuan Zeng and Michael R. Lyu and Irwin King},
-  booktitle={Proceedings of the 40th International Conference on Software Engineering, {ICSE} 2018},
-  year={2018}
+    title={Online App Review Analysis for Identifying Emerging Issues},
+    author={Cuiyun Gao and Jichuan Zeng and Michael R. Lyu and Irwin King},
+    booktitle={Proceedings of the 40th International Conference on Software Engineering, {ICSE} 2018},
+    year={2018}
 }
 ```
 ## Related Link
