@@ -68,10 +68,10 @@ def extract_review():
             if len(terms) != info_num:
                 logging.error("review format error at %s in %s" % (apk, line))
                 continue
-            if not store_num:
+            if not store_num: ## for ios
                 date = terms[3]
                 version = terms[4]
-            else:
+            else:             ## for android
                 date = terms[2]
                 version = terms[3]
             review_o = terms[1]
