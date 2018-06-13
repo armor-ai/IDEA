@@ -13,6 +13,7 @@ class Config(object):
     __SEC_DATASETS = "DataSets"
     __SEC_VERSIONS = "Versions"
     __SEC_INFO = "Info"
+    __SEC_STORE = "Store"
     __SEC_TOPICS = "Topics"
     __SEC_PHRASES = "Phrases"
     __SEC_VALIDATE = "ValidateFiles"
@@ -59,6 +60,10 @@ class Config(object):
     @classmethod
     def get_info_num(cls):
         return cls.__get_attr(int, cls.__SEC_INFO, "InfoNum")
+
+    @classmethod
+    def get_store_num(cls):
+        return cls.__get_attr(int, cls.__SEC_STORE, "StoreNum")
 
     @classmethod
     def get_topic_num(cls):

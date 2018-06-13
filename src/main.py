@@ -46,6 +46,7 @@ win_size = Config.get_window_size()
 bigram_min = Config.get_bigram_min()
 trigram_min = Config.get_trigram_min()
 info_num = Config.get_info_num()
+store_num = Config.get_store_num()
 val_index = Config.get_validate_or_not()
 
 
@@ -67,13 +68,17 @@ def extract_review():
             if len(terms) != info_num:
                 logging.error("review format error at %s in %s" % (apk, line))
                 continue
+            if not store_num:
+                date = terms[3]
+                version = terms[4]
+            else:
+                date = terms[2]
+                version = terms[3]
             review_o = terms[1]
             review_p, wc = extractSentenceWords(review_o)
             review = list(build_phrase(review_p))
             review = [list(replace_digit(s)) for s in review]
-            date = terms[3]
-            rate = float(terms[0]) if re.match(r'\d*\.?\d+', terms[0]) else 2.0     # 2.0 is the average rate
-            version = terms[4]
+            rate = float(terms[0]) if re.match(r'\d*\.?\d+', terms[0]) else 2.0  # 2.0 is the average rate
             timed_reviews[apk].append({"review": review, "date": date, "rate": rate, "version": version})
             num_docs += 1
             num_words += wc
@@ -105,7 +110,7 @@ def update_phrase():
         for line in lines:
             line = line.strip()
             terms = line.split("******")
-            if len(terms) != 4:
+            if len(terms) != info_num:
                 logging.error("review format error at %s in %s" % (apk, line))
                 continue
             review_o = terms[1]
